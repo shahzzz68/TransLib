@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string name="accessibility_service_label" translatable="false">Chat Translation</string>
+    <string name="accessibility_service_description">Chat translator will just take the messages from the list and translate them but never store or share any kind of data.</string>
+
+
+    <string name="blank_msg_error">Message should not be empty</string>
+
+    <string name="input_error">field required</string>
+
+    <string name="internet_error_msg">No Internet connected…</string>
+
+
+    // translator notificaiton strings
+    <string name="translator_notification_channel_id" translatable="false">translator_notification</string>
+    <string name="notification_header">Translator is running…</string>
+    <string name="notification_body">More options</string>
+    <string name="notification_channel_name">TRANSLATOR NOTIFICAITON CHANNEL</string>
+
+
+    <string name="daily_limit">Daily limit: %1$d / %2$d</string>
+
+    <string name="no_internet">No Internet</string>
+    <string name="daily_limit_reached">Daily limit reached</string>
+
+</resources>
