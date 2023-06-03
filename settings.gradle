@@ -1,10 +1,12 @@
 pluginManagement {
     repositories {
         google()
+
+        maven { url "https://jitpack.io" }
         mavenCentral()
         gradlePluginPortal()
 
-        maven { url 'https://jitpack.io' }
+
     }
 }
 dependencyResolutionManagement {
@@ -13,7 +15,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
 
-        maven { url 'https://jitpack.io' }
+//        maven { url 'https://jitpack.io' }
     }
 }
 rootProject.name = "TransLib"
