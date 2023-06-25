@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="black_or_white">#DEFFFFFF</color>
+
+    <color name="insta_recieve_chat_color">#272727</color>
+</resources>
