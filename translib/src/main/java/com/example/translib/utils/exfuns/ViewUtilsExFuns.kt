@@ -8,8 +8,10 @@ import android.widget.*
 import androidx.annotation.AttrRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.setPadding
 import com.example.translator.utils.exfuns.isInternetConnected
 import com.example.translib.R
+import com.example.translib.utils.LangManager
 import com.google.android.material.color.MaterialColors
 import kotlin.math.roundToInt
 
@@ -69,3 +71,63 @@ fun Context.getWidthPixels() =
 fun Context.getHeightPixels() =
     getDisplayMetrics().heightPixels
 
+
+//// spinner setup
+var spinnerAdapter: ArrayAdapter<*>? = null
+fun Spinner.setUpSpinner(
+    onSelected: (Int) -> Unit,
+    color: Int = android.R.color.black
+) {
+
+
+    setBackgroudTint(color)
+    spinnerAdapter ?: kotlin.run {
+
+        object : ArrayAdapter<Any?>(
+            context,
+            android.R.layout.simple_list_item_1,
+            LangManager.getLanguagesName(context)!!
+        ) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                return super.getView(position, convertView, parent).apply {
+                    if (this is TextView)
+                        this.apply {
+//                            layoutParams.height = 32f.dpToPixel(context)
+                            setTextColor(context.getMyColor(color))
+                            setPadding(0)
+                        }
+                }
+            }
+
+            override fun getDropDownView(
+                position: Int,
+                convertView: View?,
+                parent: ViewGroup
+            ): View {
+                return super.getDropDownView(position, convertView, parent).apply {
+                    if (this is TextView)
+                        this.apply {
+                            layoutParams.height = 32f.dpToPixel(context)
+                        }
+                }
+            }
+        }.apply {
+
+            setDropDownViewResource(android.R.layout.simple_dropdown_item_1line)
+            adapter = this
+            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    onSelected.invoke(position)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+            }
+        }
+    }
+}

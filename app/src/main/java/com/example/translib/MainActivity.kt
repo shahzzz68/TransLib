@@ -3,6 +3,7 @@ package com.example.translib
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.accessibility.AccessibilityNodeInfo
+import android.widget.Spinner
 import com.example.translib.utils.Constants
 import com.example.translib.utils.accessibility.AccessibilityServiceUtils
 import com.example.translib.utils.accessibility.AccessibilityServiceUtils.extractTextFromId
@@ -12,12 +13,12 @@ import com.example.translib.utils.accessibility.WAaccessibilityUtils.getContactN
 import com.example.translib.utils.accessibility.WAaccessibilityUtils.isWhatsapp
 import com.example.translib.utils.accessibility.WAaccessibilityUtils.isWhatsapp4B
 import com.example.translib.utils.exfuns.isTranslatorOn
+import com.example.translib.utils.exfuns.setUpSpinner
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
 
 
         TranslationUtilBuilder.setChatWindows {

@@ -18,10 +18,12 @@ import com.example.translib.utils.accessibility.AccessibilityServiceUtils.userNa
 import com.example.translib.windows.FloatingWindowBase
 import com.example.translator.windows.FloatingWindowTouch
 import com.example.translib.R
+import com.example.translib.utils.LangManager
 import com.example.translib.utils.exfuns.editMyPrefs
 import com.example.translib.utils.exfuns.getMyPrefs
 import com.example.translib.utils.exfuns.ifEditTextNotBlank
 import com.example.translib.utils.exfuns.makeEditTextEmpty
+import com.example.translib.utils.exfuns.setUpSpinner
 
 
 abstract class FloatingBaseChatWindow(
@@ -42,7 +44,7 @@ abstract class FloatingBaseChatWindow(
     }
 
 
-    abstract fun adFrame(): FrameLayout
+    abstract fun loadAdOnOpen()
     abstract fun updateAdapter(chatList: MutableList<ChatModel>)
     abstract fun createAdapter(chatList: MutableList<ChatModel>)
 
@@ -150,21 +152,21 @@ abstract class FloatingBaseChatWindow(
 
         onWindowOpenCLose?.invoke(true)
 
-//        adFrame().showChatWindowAd()  // adFrame coming from subclasses
+        loadAdOnOpen()  // adFrame coming from subclasses
     }
 
 
-//    fun setupSpinner(spinner: Spinner, textColor: Int, langCode: String) {
-//
-//        spinner.apply {
-//            setUpSpinner({
-//
-//                selectedLangCode = LangManager.getLanguagesCode(context)?.get(it) ?: "en-US"
-//                context.editMyPrefs { putInt(userName, it) }
-//            }, textColor)
-//            setSelection(context.getMyPrefs().getInt(userName, 15))
-//        }
-//    }
+    fun setupSpinner(spinner: Spinner, textColor: Int, langCode: String) {
+
+        spinner.apply {
+            setUpSpinner({
+
+                selectedLangCode = LangManager.getLanguagesCode(context)?.get(it) ?: "en-US"
+                context.editMyPrefs { putInt(userName, it) }
+            }, textColor)
+            setSelection(context.getMyPrefs().getInt(userName, 15))
+        }
+    }
 
 
     private fun updateViewLayout() {
