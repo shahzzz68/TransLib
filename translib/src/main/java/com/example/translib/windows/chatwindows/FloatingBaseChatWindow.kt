@@ -7,12 +7,13 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.ColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.example.translator.utils.exfuns.adapterAndManager
-import com.example.translator.utils.exfuns.hideKeyboard
-import com.example.translator.utils.exfuns.runTranslation
+import com.example.translib.utils.exfuns.adapterAndManager
+import com.example.translib.utils.exfuns.hideKeyboard
+import com.example.translib.utils.exfuns.runTranslation
 import com.example.translib.utils.models.chat.ChatModel
 import com.example.translib.utils.accessibility.AccessibilityServiceUtils.userName
 import com.example.translib.windows.FloatingWindowBase
@@ -79,6 +80,7 @@ abstract class FloatingBaseChatWindow(
 
     // override in base classes
     open fun sendMessage(binding: ViewBinding) {
+
         getInputText.getTextAndSendMessage()
         binding.root.hideKeyboard(context)
 //        if (isAndroidOreo())
@@ -156,14 +158,17 @@ abstract class FloatingBaseChatWindow(
     }
 
 
-    fun setupSpinner(spinner: Spinner, textColor: Int, langCode: String) {
+    fun setupSpinner(
+        spinner: Spinner,
+        @ColorInt textColorInt: Int
+    ) {
 
         spinner.apply {
             setUpSpinner({
 
                 selectedLangCode = LangManager.getLanguagesCode(context)?.get(it) ?: "en-US"
                 context.editMyPrefs { putInt(userName, it) }
-            }, textColor)
+            }, textColorInt)
             setSelection(context.getMyPrefs().getInt(userName, 15))
         }
     }

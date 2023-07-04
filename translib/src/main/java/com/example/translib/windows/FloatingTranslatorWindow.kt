@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import androidx.core.view.isVisible
-import com.example.translator.utils.exfuns.*
 import com.example.translator.windows.FloatingWindowTouch
 import com.example.translib.R
 import com.example.translib.TranslationUtilBuilder
@@ -17,6 +16,9 @@ import com.example.translib.databinding.LayoutFloatingTranslationBinding
 import com.example.translib.utils.Constants
 import com.example.translib.utils.exfuns.editMyPrefs
 import com.example.translib.utils.exfuns.getCompletedTranslations
+import com.example.translib.utils.exfuns.getStatusBarHeight
+import com.example.translib.utils.exfuns.isInternetConnected
+import com.example.translib.utils.exfuns.runTranslation
 import com.example.translib.utils.getSaveInputLang
 import com.example.translib.utils.getSaveOutputLang
 

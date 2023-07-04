@@ -9,8 +9,8 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import com.example.translib.utils.exfuns.getHeightPixels
 import com.example.translib.utils.exfuns.getWidthPixels
-import com.example.translator.utils.exfuns.ifNull
-import com.example.translator.utils.exfuns.isAndroidL_MR1
+import com.example.translib.utils.exfuns.ifNull
+import com.example.translib.utils.exfuns.isAndroidL_MR1
 import kotlin.math.abs
 
 open class FloatingWindowBase(private val context: Context) {

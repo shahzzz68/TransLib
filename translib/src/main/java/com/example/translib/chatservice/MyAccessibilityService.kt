@@ -8,6 +8,8 @@ import android.os.Looper
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import com.example.translib.windows.chatwindows.FloatingInstaWindow
+import com.example.translib.windows.chatwindows.FloatingWAwindow
 import com.example.translator.utils.*
 import com.example.translib.utils.accessibility.InstaAccessibilityUtils.extractInstaMessages
 import com.example.translib.utils.accessibility.WAaccessibilityUtils.extractWAmessages
@@ -16,22 +18,23 @@ import com.example.translib.utils.accessibility.WAaccessibilityUtils.getEditText
 import com.example.translib.utils.accessibility.WAaccessibilityUtils.getSendBtnId
 import com.example.translib.utils.accessibility.WAaccessibilityUtils.isWhatsapp
 import com.example.translib.utils.accessibility.WAaccessibilityUtils.isWhatsapp4B
-import com.example.translator.utils.exfuns.preventMultipleInvocations
-import com.example.translator.utils.exfuns.runAfter
-import com.example.translib.IWindowCallbacks
-import com.example.translib.TranslationUtilBuilder
-
+import com.example.translib.utils.exfuns.preventMultipleInvocations
+import com.example.translib.utils.exfuns.runAfter
 import com.example.translib.utils.Constants
 import com.example.translib.utils.CoroutineUtils
 import com.example.translib.utils.EventBroadcast
 import com.example.translib.utils.NotificationHelper
 import com.example.translib.utils.accessibility.AccessibilityServiceUtils.conversationList
 import com.example.translib.utils.accessibility.AccessibilityServiceUtils.extractSpecificText
+import com.example.translib.utils.accessibility.AccessibilityServiceUtils.extractTextFromId
+import com.example.translib.utils.accessibility.AccessibilityServiceUtils.extractViewFromID
 import com.example.translib.utils.accessibility.AccessibilityServiceUtils.isInstaPkj
 import com.example.translib.utils.accessibility.AccessibilityServiceUtils.performChatSendActions
 import com.example.translib.utils.accessibility.AccessibilityServiceUtils.userName
 import com.example.translib.utils.accessibility.AccessibilityServiceUtils.whatsOrInstaListNull
+import com.example.translib.utils.accessibility.WAaccessibilityUtils.getContactNameId
 import com.example.translib.utils.exfuns.isAnyTranslatorOn
+import com.example.translib.utils.exfuns.isTranslatorOn
 import com.example.translib.windows.FloatingSearchWidget
 import com.example.translib.windows.FloatingTranslatorWindow
 import com.example.translib.windows.chatwindows.FloatingBaseChatWindow
@@ -271,17 +274,16 @@ class MyAccessibilityService : AccessibilityService(),
         floatingWindow ?: kotlin.run {
             rootInActiveWindow?.run {
 
-                TranslationUtilBuilder.initializeChatWindow?.invoke(this,
-                    object : IWindowCallbacks {
+                if (isInstaPkj() && isTranslatorOn(Constants.INSTA_TRANSLATOR_ON)) {
+                    initializeInstaWindow()
 
-                        override fun onWindowInitialized(floatingBaseChatWindow: FloatingBaseChatWindow) {
-                            floatingWindow = floatingBaseChatWindow
-                        }
-
-                        override fun onWindowOpenClosed(isOpen: Boolean) {
-                            windowOpenCloseCallback(isOpen)
-                        }
-                    })
+                }
+                else if ((isWhatsapp() && isTranslatorOn(Constants.WA_TRANSLATOR_ON)) || (isWhatsapp4B() && isTranslatorOn(
+                        Constants.WA_4B_TRANSLATOR_ON
+                    ))
+                ) {
+                    initializeWAwindow()
+                }
 
             }
         }
@@ -291,6 +293,52 @@ class MyAccessibilityService : AccessibilityService(),
             isViewInitialized = true
         }
 
+    }
+
+
+    ///////////////////  create WA floating window ////////////////////////////////////////
+    private fun AccessibilityNodeInfo.initializeWAwindow() {
+        // extracting user name of current chat in WA
+
+//        if (!isTranslatorOn(Constants.WA_TRANSLATOR_ON) && !isTranslatorOn(Constants.WA_4B_TRANSLATOR_ON))
+//            return
+
+
+        if (extractViewFromID(Constants.WA_LIST) == null) return
+
+        userName = extractTextFromId(getContactNameId())
+
+        // initializing WA floating window
+
+        FloatingWAwindow(
+            this@MyAccessibilityService, this@MyAccessibilityService
+        ).apply {/// on window open callback
+            onWindowOpenCLose = windowOpenCloseCallback
+
+        }.also {
+            floatingWindow = it
+        }
+    }
+
+    ////////////  create insta floating window//////////////////////////////////////////
+    private fun AccessibilityNodeInfo?.initializeInstaWindow() {
+
+        // if not in chat activity then return
+        if (extractViewFromID(Constants.INSTAGRAM_RECYCLER_VIEW_ID) == null) return
+
+        // extracting user name of current chat in insta
+
+        userName = extractTextFromId(Constants.INSTAGRAM_HEADER_USER_NAME_ID)
+
+        // initializing insta floating window
+        FloatingInstaWindow(
+            this@MyAccessibilityService, this@MyAccessibilityService
+        ).apply {
+            onWindowOpenCLose = windowOpenCloseCallback
+
+        }.also {
+            floatingWindow = it
+        }
     }
 
     private val windowOpenCloseCallback: (Boolean) -> Unit = { isOpen ->

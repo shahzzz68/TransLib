@@ -9,6 +9,8 @@ import com.example.translib.windows.chatwindows.FloatingBaseChatWindow
 
 object TranslationUtilBuilder {
 
+    var isSingleActivity: Boolean = false
+    var notificationIconId: Int = -1
     var searchIconId: Int = -1
     var searchHandleId: Int = -1
     var isSubscribed = false
@@ -20,8 +22,17 @@ object TranslationUtilBuilder {
     var initializeChatWindow: (AccessibilityNodeInfo.(/*inner lambda*/IWindowCallbacks) -> Unit)? =
         null
 
-    fun setParentClass(parentStackClass: Class<*>) = apply {
+
+    fun isSingleActivity(isSingle: Boolean) = apply {
+        isSingleActivity = isSingle
+    }
+
+    fun setNotificationParentClass(parentStackClass: Class<*>) = apply {
         NotificationHelper.parentStackClass = parentStackClass
+    }
+
+    fun setNotificationClickedStackClass(clickedStackClass: Class<*>) = apply {
+        NotificationHelper.clickedStackClass = clickedStackClass
     }
 
     fun setNotificationAction(notificationAction: (NotificationCompat.Builder.() -> Unit)?) =
@@ -60,6 +71,10 @@ object TranslationUtilBuilder {
         screenTranslatorWindowBgColor = color
     }
 
+
+    fun setNotificationIcon(iconId: Int) = apply {
+        notificationIconId = iconId
+    }
 
     fun setWindowOpenCloseCallback() {}
 }

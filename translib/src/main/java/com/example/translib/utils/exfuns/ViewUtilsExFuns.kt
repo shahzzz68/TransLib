@@ -2,19 +2,33 @@ package com.example.translib.utils.exfuns
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.util.DisplayMetrics
-import android.view.*
-import android.widget.*
+import android.view.View
+import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.setPadding
-import com.example.translator.utils.exfuns.isInternetConnected
 import com.example.translib.R
 import com.example.translib.utils.LangManager
 import com.google.android.material.color.MaterialColors
 import kotlin.math.roundToInt
 
+
+fun View.makeVisible() {
+    visibility = View.VISIBLE
+}
+
+fun View.makeHide() {
+    visibility = View.GONE
+}
 
 fun EditText.ifEditTextNotBlank(
     errorMsg: String = context.getString(R.string.input_error),
@@ -22,7 +36,11 @@ fun EditText.ifEditTextNotBlank(
     action: (EditText) -> Unit
 ) {
     when {
-        text.toString().isBlank() -> error = errorMsg
+        text.toString().isBlank() -> {
+            error = errorMsg
+            return
+        }
+
         internetCheck && !context.isInternetConnected() -> error =
             context.getString(R.string.internet_error_msg)
 
@@ -36,12 +54,23 @@ fun EditText.makeEditTextEmpty(hint: String = "") {
         setHint(hint)
 }
 
-fun View.changeBgColor(color: Int ) {
+fun View.changeBgColor(color: Int) {
     background.mutate().setTint(context.getMyColor(color))
 }
 
 fun View.getMaterialColorRef(@AttrRes colorAttributeResId: Int) =
     MaterialColors.getColor(this, colorAttributeResId)
+
+
+@ColorInt
+fun Context.getThemeColor(@AttrRes attrResId: Int): Int {
+    val a = obtainStyledAttributes(null, intArrayOf(attrResId))
+    return try {
+        a.getColor(0, Color.BLUE)
+    } finally {
+        a.recycle()
+    }
+}
 
 fun Context.getMyColor(color: Int) =
     ResourcesCompat.getColor(resources, color, theme)
@@ -49,8 +78,8 @@ fun Context.getMyColor(color: Int) =
 fun Context.getMyDrawable(drawable: Int) =
     ResourcesCompat.getDrawable(resources, drawable, theme)
 
-fun View.setBackgroudTint(color: Int) {
-    ViewCompat.setBackgroundTintList(this, ColorStateList.valueOf(context.getMyColor(color)))
+fun View.setBackgroudTint(@ColorInt color: Int) {
+    ViewCompat.setBackgroundTintList(this, ColorStateList.valueOf(color))
 }
 
 fun Float.dpToPixel(context: Context): Int {
@@ -76,11 +105,11 @@ fun Context.getHeightPixels() =
 var spinnerAdapter: ArrayAdapter<*>? = null
 fun Spinner.setUpSpinner(
     onSelected: (Int) -> Unit,
-    color: Int = android.R.color.black
+    @ColorInt colorInt: Int
 ) {
 
 
-    setBackgroudTint(color)
+    setBackgroudTint(colorInt)
     spinnerAdapter ?: kotlin.run {
 
         object : ArrayAdapter<Any?>(
@@ -93,7 +122,7 @@ fun Spinner.setUpSpinner(
                     if (this is TextView)
                         this.apply {
 //                            layoutParams.height = 32f.dpToPixel(context)
-                            setTextColor(context.getMyColor(color))
+                            setTextColor(colorInt)
                             setPadding(0)
                         }
                 }

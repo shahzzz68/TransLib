@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/left_wa_chat"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/innerLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_wa_conversation"
+        android:clickable="false"
+        android:elevation="1dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="6dp">
+
+        <TextView
+            android:id="@+id/groupMsgSendertxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="2dp"
+            android:maxLines="1"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@+id/groupMsgSenderUnsavedtxt"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="0302" />
+
+        <TextView
+            android:id="@+id/groupMsgSenderUnsavedtxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:maxLines="1"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/groupMsgSendertxt"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="name" />
+
+        <LinearLayout
+            android:id="@+id/qoutedMsgLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="3dp"
+            android:background="@drawable/bg_replied_chat_left"
+            android:orientation="vertical"
+            android:paddingVertical="6dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="6dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@id/chatMsg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/groupMsgSendertxt">
+
+            <TextView
+                android:id="@+id/qoutedMsgTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                tools:text="030129428499248" />
+
+            <TextView
+                android:id="@+id/qoutedMsgText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:maxWidth="260dp"
+                android:textSize="14sp"
+                tools:text="hello how are you what are you doing where you from" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/chatMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:gravity="start"
+            android:linksClickable="true"
+            android:maxWidth="260dp"
+            android:text="hello how are you"
+            android:textColor="@color/black_or_white"
+            android:textIsSelectable="true"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/msgTime"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/qoutedMsgLayout" />
+
+        <TextView
+            android:id="@+id/msgTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_marginStart="8dp"
+            android:gravity="end"
+            android:text="12:30"
+            android:textColor="@color/black_or_white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/chatMsg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/chatMsg" />
+
+        <View
+            android:id="@+id/viewForClick"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

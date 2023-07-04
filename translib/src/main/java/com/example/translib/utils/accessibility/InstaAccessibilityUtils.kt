@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Rect
 import android.view.accessibility.AccessibilityNodeInfo
 import com.example.translator.models.chat.*
-import com.example.translator.utils.exfuns.formattedTime
+import com.example.translib.utils.exfuns.formattedTime
 import com.example.translib.utils.Constants
 import com.example.translib.utils.accessibility.AccessibilityServiceUtils.conversationList
 import com.example.translib.utils.exfuns.getWidthPixels

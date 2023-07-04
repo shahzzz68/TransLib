@@ -3,5 +3,27 @@
 
     <color name="black_or_white">#DEFFFFFF</color>
 
+
+    // insta chat dark mode colors
+    <color name="insta_chat_bg_color">@android:color/black</color>
+    <color name="insta_chat_back_btn_color">@color/white</color>
+
+    <color name="insta_chat_input_color">@color/white</color>
     <color name="insta_recieve_chat_color">#272727</color>
+
+    <color name="insta_chat_input_bg_color">@color/insta_recieve_chat_color</color>
+
+
+
+
+    // wa chat dark mode colors
+    <color name="wa_defaul_color">#273038</color>
+    <color name="wa_send_btn_color">#0FC097</color>
+    <color name="wa_chat_bg_color">#130C01</color>
+    <color name="wa_input_bg_color">#313A3F</color>
+    <color name="wa_chat_color_right">#134F42</color>
+    <color name="wa_replied_chat_color_left">#242B31</color>
+    <color name="wa_replied_chat_color_right">#114438</color>
+
+    <color name="shimmerColor">#272727</color>
 </resources>

@@ -8,18 +8,23 @@ import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.os.Build
+import androidx.core.app.ComponentActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.VISIBILITY_SECRET
 import androidx.core.app.TaskStackBuilder
-import com.example.translator.utils.exfuns.isAndroidOreo
 import com.example.translib.R
+import com.example.translib.TranslationUtilBuilder
+import com.example.translib.utils.exfuns.isAndroidOreo
 import com.example.translib.utils.exfuns.isTranslatorOn
+import com.example.translib.utils.exfuns.makeSingleTop
 
 
 object NotificationHelper {
 
     var notificationAction: (NotificationCompat.Builder.() -> Unit)? = null
+
     lateinit var parentStackClass: Class<*>
+    lateinit var clickedStackClass: Class<*>
 
     private var pendingIntent: PendingIntent? = null
     private const val NOTIFICATION_ID = 1234
@@ -30,8 +35,17 @@ object NotificationHelper {
     private fun createNotification(context: Activity) {
         cancelNotification()
 
+
+
         pendingIntent =
-            Intent(context, parentStackClass).makeTaskStackBuilder(context)
+            Intent(context, clickedStackClass)
+                .makeSingleTop().run {
+                    if (parentStackClass == clickedStackClass)
+                        makePendingIntent(context)
+                    else
+                        makeTaskStackBuilder(context)
+                }
+
 
 //        val pendingIntent = PendingIntent.getActivity(
 //            context,
@@ -41,18 +55,19 @@ object NotificationHelper {
         notificationManager =
             context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
+
         val mBuilder = NotificationCompat.Builder(
             context,
             context.getString(R.string.translator_notification_channel_id)
         )
-//            .setSmallIcon(R.mipmap.app_icon)
+            .setSmallIcon(TranslationUtilBuilder.notificationIconId)
             .setAutoCancel(false)
             .setOngoing(true)
             .setContentIntent(pendingIntent)
             .setContentTitle(context.getString(R.string.notification_header))
             .setContentText(context.getString(R.string.notification_body))
             .setVisibility(VISIBILITY_SECRET)
-            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setPriority(NotificationCompat.PRIORITY_MIN)
             .apply {
                 notificationAction?.let { it() }
             }
@@ -63,7 +78,7 @@ object NotificationHelper {
     }
 
     private fun createChannel(context: Context) {
-        if (context.isAndroidOreo()) {
+        if (isAndroidOreo()) {
 
             val notificationChannel = NotificationChannel(
                 context.getString(R.string.translator_notification_channel_id),
@@ -82,7 +97,7 @@ object NotificationHelper {
             notificationManager.cancelAll()
     }
 
-    fun Activity.showOrHideNotification() {
+    fun ComponentActivity.showOrHideNotification() {
 //        pendingIntent?.let {
 //            if () {
 //
@@ -100,20 +115,39 @@ object NotificationHelper {
         }
     }
 
-    private fun Intent.makeTaskStackBuilder(context: Context): PendingIntent? {
-        val pendingIntentFLag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.FLAG_IMMUTABLE
-        } else {
-            PendingIntent.FLAG_UPDATE_CURRENT
-        }
+    fun Intent.makeTaskStackBuilder(context: Context): PendingIntent? {
+        val pendingIntentFLag = getFlag()
         return TaskStackBuilder.create(context).run {
             addParentStack(parentStackClass)
-            addNextIntent(Intent(context, parentStackClass).apply {
-                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-            })
+            addNextIntent(Intent(context, parentStackClass).makeSingleTop())
             addNextIntent(this@makeTaskStackBuilder)
             getPendingIntent(0, pendingIntentFLag)
         }
 
     }
+
+    private fun getFlag(): Int {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.FLAG_IMMUTABLE
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
+    }
+
+
+    fun Intent.makePendingIntent(
+        context: Context
+    ): PendingIntent? {
+
+        return PendingIntent.getActivity(context, 0, this, getFlag())
+    }
+
+    fun Intent.makeBroadcastPendingIntent(
+        context: Context
+    ): PendingIntent? {
+
+        return PendingIntent.getBroadcast(context, 0, this, getFlag())
+    }
+
+
 }

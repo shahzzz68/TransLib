@@ -4,6 +4,30 @@
     <color name="white">#FFFFFF</color>
     <color name="black_or_white">#000000</color>
 
+
+
+    <color name="insta_chat_bg_color">#FFFFFF</color>
+    <color name="insta_chat_back_btn_color">#0184FF</color>
+    <color name="insta_header_text_color">@android:color/black</color>
+
+    <color name="insta_chat_input_color">#000000</color>
+    <color name="insta_sent_btn_color">#0184FF</color>
     <color name="insta_sent_chat_color">#0184FF</color>
     <color name="insta_recieve_chat_color">#F2F2F2</color>
+
+    <color name="insta_chat_input_bg_color">#F2F2F2</color>
+    //wa chat colors
+    <color name="wa_defaul_color">#075E54</color>
+    <color name="wa_send_btn_color">#0B9679</color>
+    <color name="wa_input_bg_color">#FEFDFE</color>
+
+    <color name="wa_chat_bg_color">#F8F1E7</color>
+    <color name="wa_chat_color_right">#E1FEC6</color>
+    <color name="wa_chat_color_left">@color/wa_input_bg_color</color>
+    <color name="wa_replied_chat_color_right">#DBFCC0</color>
+    <color name="wa_replied_chat_color_left">#F7F5F7</color>
+    <color name="wa_replied_chat_line_color">#35CD96</color>
+
+
+    <color name="shimmerColor">#C6C6C6</color>
 </resources>

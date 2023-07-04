@@ -1,10 +1,12 @@
-package com.example.translator.utils.exfuns
+package com.example.translib.utils.exfuns
 
 import android.accessibilityservice.AccessibilityService
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.*
+import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.NetworkInfo
@@ -20,8 +22,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ShareCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -53,6 +53,20 @@ fun Resources.getStatusBarHeight(): Int {
     }
 }
 
+
+fun Context.getApplicationIcon(): Drawable? =
+    try {
+        packageManager.getApplicationIcon(applicationInfo)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+
+
+fun Intent.makeSingleTop(): Intent {
+    flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+    return this
+}
 
 fun Context.canDrawOverlay(): Boolean {
     // Android Version is lesser than Marshmallow or
@@ -89,8 +103,6 @@ fun Context.openAccessibilitySettings() {
 //    startActivityForResult(, 0)
     startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
 }
-
-
 
 
 fun Context.isInternetConnected(): Boolean {
@@ -322,7 +334,6 @@ fun String.runTranslation(
         })
 }
 
-fun Context.isAndroidOreo() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
 
 fun View.hideKeyboard(context: Context) {
     (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(

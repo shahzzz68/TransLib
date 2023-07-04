@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/right_wa_chat"
+    android:gravity="end"
+    android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/innerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_wa_conversation"
+            android:elevation="1dp"
+            android:layout_gravity="end"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="8dp"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="6dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/qoutedMsgLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/bg_replied_chat_right"
+                android:orientation="vertical"
+                android:paddingVertical="6dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="6dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/chatMsg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/qoutedMsgTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0301"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/qoutedMsgText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:maxWidth="260dp"
+                    android:maxLines="3"
+                    android:ellipsize="end"
+                    android:text="hello how are you"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/chatMsg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoLink="all"
+                android:gravity="start"
+                android:linksClickable="true"
+                android:maxWidth="260dp"
+                android:text="e you"
+                android:textColor="@color/black_or_white"
+                android:textIsSelectable="true"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/msgTime"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/qoutedMsgLayout"
+                />
+
+            <TextView
+                android:id="@+id/msgTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="4dp"
+                android:gravity="end"
+                android:text="11:11 am"
+                android:textColor="@color/black_or_white"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toStartOf="@id/msgStatus"
+                app:layout_constraintBottom_toBottomOf="@+id/chatMsg"
+                app:layout_constraintStart_toEndOf="@+id/chatMsg" />
+
+            <ImageView
+                android:id="@+id/msgStatus"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_tick"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/msgTime"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/msgTime"
+                app:tint="@android:color/darker_gray" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

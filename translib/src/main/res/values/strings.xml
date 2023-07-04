@@ -25,4 +25,24 @@
     <string name="no_internet">No Internet</string>
     <string name="daily_limit_reached">Daily limit reached</string>
 
+
+
+    // insta chat window
+    <string name="send">Send</string>
+    <string name="message">Message…</string>
+    <string name="thanks">Thanks</string>
+
+
+    // WA related strings
+    <string name="wa_input_hint">Type a message</string>
+
+
+
+    /// notification dialog strings
+    <string name="notification_permission_required_message">Permission required to show notification</string>
+    <string name="notification_permission_required">Notification Permission Required</string>
+    <string name="permission_required_msg">%1$s Tap allow to enable from system setting</string>
+    <string name="allow">Allow</string>
+    <string name="cancel">Cancel</string>
+
 </resources>

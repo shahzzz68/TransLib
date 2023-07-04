@@ -1,69 +1,81 @@
 package com.example.translib
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.translib.utils.Constants
-import com.example.translib.utils.accessibility.AccessibilityServiceUtils
-import com.example.translib.utils.accessibility.AccessibilityServiceUtils.extractTextFromId
-import com.example.translib.utils.accessibility.AccessibilityServiceUtils.extractViewFromID
-import com.example.translib.utils.accessibility.AccessibilityServiceUtils.isInstaPkj
-import com.example.translib.utils.accessibility.WAaccessibilityUtils.getContactNameId
-import com.example.translib.utils.accessibility.WAaccessibilityUtils.isWhatsapp
-import com.example.translib.utils.accessibility.WAaccessibilityUtils.isWhatsapp4B
-import com.example.translib.utils.exfuns.isTranslatorOn
+import com.example.translib.utils.NotificationHelper.makeBroadcastPendingIntent
+import com.example.translib.utils.NotificationHelper.showOrHideNotification
+import com.example.translib.utils.exfuns.getApplicationIcon
+import com.example.translib.utils.exfuns.onOffTranslator
+import com.example.translib.utils.exfuns.showToast
+import com.example.translib.utils.onPermissionResult
+import com.example.translib.utils.requestNotification
 
 class MainActivity : AppCompatActivity() {
+
+    private val requestPermissionLauncher =
+        onPermissionResult {
+            showOrHideNotification()
+        }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-        TranslationUtilBuilder.setChatWindows {
-            when {
-                isInstaPkj() && isTranslatorOn(Constants.INSTA_TRANSLATOR_ON) -> {
-                    // if not in chat activity then return
-                    if (extractViewFromID(Constants.INSTAGRAM_RECYCLER_VIEW_ID) == null) return@setChatWindows
-
-                    // extracting user name of current chat in insta
-
-                    AccessibilityServiceUtils.userName =
-                        extractTextFromId(Constants.INSTAGRAM_HEADER_USER_NAME_ID)
+        onOffTranslator(Constants.MAIN_BTN_ON, true)
+        onOffTranslator(Constants.WA_TRANSLATOR_ON, true)
+        onOffTranslator(Constants.INSTA_TRANSLATOR_ON, true)
 
 
-                    // initializing insta floating window
-//        FloatingInstaWindow(
-//            this@MyAccessibilityService, this@MyAccessibilityService
-//        ).apply {
-//            onWindowOpenCLose = windowOpenCloseCallback
-//
-//        }.also {
-//            floatingWindow = it
-//        }
+        val textView = findViewById<TextView>(R.id.textView)
 
+        findViewById<ImageView>(R.id.imageView).apply {
+            setImageDrawable(getApplicationIcon())
 
-                }
+            setOnClickListener {
+                requestNotification(requestPermissionLauncher)
 
-                isWhatsapp() && isTranslatorOn(Constants.WA_TRANSLATOR_ON) || isWhatsapp4B() && isTranslatorOn(
-                    Constants.WA_4B_TRANSLATOR_ON
-                ) -> {
-                    if (extractViewFromID(Constants.WA_LIST) == null) return@setChatWindows
-
-                    AccessibilityServiceUtils.userName = extractTextFromId(getContactNameId())
-
-                    // initializing WA floating window
-
-//        FloatingWAwindow(
-//            this@MyAccessibilityService, this@MyAccessibilityService
-//        ).apply {/// on window open callback
-//            onWindowOpenCLose = windowOpenCloseCallback
-//
-//        }.also {
-//            floatingWindow = it
-//        }
-                }
+                textView.text = "click"
             }
         }
+
+
+        TranslationUtilBuilder
+            .setNotificationParentClass(this::class.java)
+            .setNotificationClickedStackClass(this::class.java)
+            .setNotificationIcon(R.drawable.ic_launcher_background)
+            .setNotificationAction {
+                val pendingIntent = Intent(
+                    this@MainActivity,
+                    NotificationReceiver::class.java
+                ).apply {
+                    putExtra("a", "1")
+                }.makeBroadcastPendingIntent(this@MainActivity)
+                addAction(R.drawable.ic_launcher_foreground, "Translator", pendingIntent)
+
+            }
+
+
     }
 
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        intent?.extras
+    }
+
+
+    class NotificationReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+
+            context?.showToast(intent?.getStringExtra("a").toString())
+        }
+    }
 }
