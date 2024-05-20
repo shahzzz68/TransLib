@@ -29,6 +29,7 @@ import com.example.translib.utils.accessibility.AccessibilityServiceUtils.extrac
 import com.example.translib.utils.accessibility.AccessibilityServiceUtils.extractTextFromId
 import com.example.translib.utils.accessibility.AccessibilityServiceUtils.extractViewFromID
 import com.example.translib.utils.accessibility.AccessibilityServiceUtils.isInstaPkj
+import com.example.translib.utils.accessibility.AccessibilityServiceUtils.logViewHierarchy
 import com.example.translib.utils.accessibility.AccessibilityServiceUtils.performChatSendActions
 import com.example.translib.utils.accessibility.AccessibilityServiceUtils.userName
 import com.example.translib.utils.accessibility.AccessibilityServiceUtils.whatsOrInstaListNull
@@ -38,6 +39,8 @@ import com.example.translib.utils.exfuns.isTranslatorOn
 import com.example.translib.windows.FloatingSearchWidget
 import com.example.translib.windows.FloatingTranslatorWindow
 import com.example.translib.windows.chatwindows.FloatingBaseChatWindow
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import java.util.Locale
 
 
@@ -115,12 +118,13 @@ class MyAccessibilityService : AccessibilityService(),
     @SuppressLint("SwitchIntDef")
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
 
+        logViewHierarchy(rootInActiveWindow, 0)
+
         if (!isAnyTranslatorOn()) return
 
         when (event?.eventType) {
             AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> {
 
-//                logViewHierarchy(rootInActiveWindow, 0)
                 if (event.packageName != Constants.INSTAGRAM_PKJ && event.packageName != Constants.WA_PKJ && event.packageName != Constants.WA_4B_PKJ) return
 
                 Log.d("className", event.className.toString())
@@ -155,7 +159,8 @@ class MyAccessibilityService : AccessibilityService(),
              */
             AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> {
 
-                if (lastTime + 300 > System.currentTimeMillis()) return
+                Log.d("contentChange", event.className.toString())
+
 
                 if (floatingWindow?.isChatHidden() != false) // only update when chat window is showing
                     return
@@ -168,13 +173,16 @@ class MyAccessibilityService : AccessibilityService(),
 //                        Log.d("classNameSource",event.source.className.toString())
 
 //                        preventMultipleInvocations({
+
+                        if (lastTime + 600 > System.currentTimeMillis()) return
+//
                         refreshChatList()
                         Log.d(
                             "content", "last"
                         )
 //                        })
-//                        chatRefreshhandler.removeCallbacksAndMessages(null)
-//                        chatRefreshhandler.post(chatRefreshRunnable)
+//                        chatRefreshHandler.removeCallbacksAndMessages(null)
+//                        chatRefreshHandler.post(chatRefreshRunnable)
 
                     }
 
@@ -225,20 +233,42 @@ class MyAccessibilityService : AccessibilityService(),
 
     }
 
+    private var updateListJob: Job? = null
     private fun refreshChatList() {
 
-//        if (isAndroidOreo())
-        updateList()
+        updateListJob?.cancel()
+//        val src = if (isAndroidOreo()) source else rootInActiveWindow
+        val src = windowStateChangeSource ?: rootInActiveWindow ?: windowContentChangeSource
+        src?.run {
+            updateListJob = CoroutineUtils.executeIO({
 
-//        else
-//            preventMultipleInvocations({
-//                updateList()
-//            }, 50)
+                delay(500)
 
-//            floatingWindow?.updateAdapter(conversationList)
+                Log.d(
+                    "refreshing", "list"
+                )
 
-        //
-        //                // reset to true after all processes completed
+                if (isInstaPkj()) extractInstaMessages(
+                    this@MyAccessibilityService
+                ) // extracting all msgs from screen
+                else if (isWhatsapp() || isWhatsapp4B()) {
+//                    conversationList.clear()
+                    extractWAmessages(this@MyAccessibilityService)
+
+                } else {
+                    null
+                }
+
+
+            }, {
+//            conversationList.forEach { model ->
+//                Log.d("messages", model.toString())
+//            }
+                floatingWindow?.updateAdapter(conversationList)
+
+//                floatingWindow?.createAdapter(conversationList)
+            })
+        }
     }
 
     override fun onInterrupt() {
@@ -277,8 +307,7 @@ class MyAccessibilityService : AccessibilityService(),
                 if (isInstaPkj() && isTranslatorOn(Constants.INSTA_TRANSLATOR_ON)) {
                     initializeInstaWindow()
 
-                }
-                else if ((isWhatsapp() && isTranslatorOn(Constants.WA_TRANSLATOR_ON)) || (isWhatsapp4B() && isTranslatorOn(
+                } else if ((isWhatsapp() && isTranslatorOn(Constants.WA_TRANSLATOR_ON)) || (isWhatsapp4B() && isTranslatorOn(
                         Constants.WA_4B_TRANSLATOR_ON
                     ))
                 ) {
@@ -357,38 +386,6 @@ class MyAccessibilityService : AccessibilityService(),
     }
 
 
-    ///////////////////////////////   updating chat list according two different scenarios///////////////
-    private fun updateList() {
-
-//        val src = if (isAndroidOreo()) source else rootInActiveWindow
-        val src = windowStateChangeSource ?: rootInActiveWindow ?: windowContentChangeSource
-        src?.run {
-            CoroutineUtils.executeIO({
-
-                if (isInstaPkj()) extractInstaMessages(
-                    this@MyAccessibilityService
-                ) // extracting all msgs from screen
-                else if (isWhatsapp() || isWhatsapp4B()) {
-//                    conversationList.clear()
-                    extractWAmessages(this@MyAccessibilityService)
-
-                } else {
-                    null
-                }
-
-
-            }, {
-//            conversationList.forEach { model ->
-//                Log.d("messages", model.toString())
-//            }
-                floatingWindow?.updateAdapter(conversationList)
-
-//                floatingWindow?.createAdapter(conversationList)
-            })
-        }
-    }
-
-
     ////////////  msg sending callback either from any chat window/////////////////////////////////////
 
     override fun onMessageSend(message: String) {
@@ -398,7 +395,10 @@ class MyAccessibilityService : AccessibilityService(),
         val rootSource = windowStateChangeSource ?: rootInActiveWindow
         rootSource?.run {
             if (isInstaPkj()) performChatSendActions(
-                message, Constants.INSTAGRAM_EDITTEXT_ID, Constants.INSTAGRAM_SENDBTN_ID
+                message,
+                Constants.INSTAGRAM_EDITTEXT_ID,
+                Constants.INSTAGRAM_SENDBTN_ID,
+                Constants.INSTAGRAM_SENDBTN_ID_2 // have different ids for different versions
             )
             else if (isWhatsapp() || isWhatsapp4B()) {
                 performChatSendActions(

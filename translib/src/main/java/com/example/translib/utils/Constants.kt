@@ -76,7 +76,8 @@ object Constants {
     // instagram ui ids
     const val INSTAGRAM_CONVERSATION_ACTIVITY = "com.instagram.modal.ModalActivity"
     const val INSTAGRAM_EDITTEXT_ID = "com.instagram.android:id/row_thread_composer_edittext"
-    const val INSTAGRAM_SENDBTN_ID = "com.instagram.android:id/row_thread_composer_button_send"
+    const val INSTAGRAM_SENDBTN_ID = "com.instagram.android:id/row_thread_composer_send_button_container"
+    const val INSTAGRAM_SENDBTN_ID_2 = "com.instagram.android:id/row_thread_composer_button_send"
     const val INSTAGRAM_RECYCLER_VIEW_ID = "com.instagram.android:id/message_list"
 
     // chat related ids

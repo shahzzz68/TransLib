@@ -2,7 +2,7 @@
 <resources>
 
 
-    <string name="accessibility_service_label" translatable="false">Chat Translation</string>
+    <string name="accessibility_service_label" translatable="false">Translation Lib</string>
     <string name="accessibility_service_description">Chat translator will just take the messages from the list and translate them but never store or share any kind of data.</string>
 
 

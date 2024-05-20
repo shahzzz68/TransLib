@@ -34,7 +34,7 @@ object InstaAccessibilityUtils {
         }
     }
 
-    fun AccessibilityNodeInfo.extractInstaMessages(context: Context){
+    fun AccessibilityNodeInfo.extractInstaMessages(context: Context) {
         try {
             // extracting insta messages
             className?.let {
@@ -65,7 +65,7 @@ object InstaAccessibilityUtils {
         val chatModel = ChatModel(msgId = 0)
 
         when (info.className) {
-            Constants.FRAME_LAYOUT-> {
+            Constants.FRAME_LAYOUT -> {
 
                 for (i in 0 until info.childCount) {
 
@@ -183,11 +183,13 @@ object InstaAccessibilityUtils {
                         addChatDataToList(this)
                     }
                 }
+
                 MessageType.LINK -> {
                     linkPreviewModel?.let {
                         addChatDataToList(this)
                     }
                 }
+
                 MessageType.LIKE_HEART -> {  // this is for adding the like/heart message
                     addChatDataToList(this)
                 }
@@ -202,7 +204,8 @@ object InstaAccessibilityUtils {
         }
 
         if (!conversationList.contains(model))
-            conversationList.add(model)
+            if (model.msgStatus?.contains("sending", true) == false)
+                conversationList.add(model)
 
     }
 

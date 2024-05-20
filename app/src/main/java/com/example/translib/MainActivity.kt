@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -30,10 +31,14 @@ class MainActivity : AppCompatActivity() {
 
         onOffTranslator(Constants.MAIN_BTN_ON, true)
         onOffTranslator(Constants.WA_TRANSLATOR_ON, true)
+        onOffTranslator(Constants.WA_4B_TRANSLATOR_ON, true)
         onOffTranslator(Constants.INSTA_TRANSLATOR_ON, true)
 
 
         val textView = findViewById<TextView>(R.id.textView)
+        findViewById<TextView>(R.id.button).setOnClickListener {
+            startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+        }
 
         findViewById<ImageView>(R.id.imageView).apply {
             setImageDrawable(getApplicationIcon())
@@ -58,7 +63,6 @@ class MainActivity : AppCompatActivity() {
                     putExtra("a", "1")
                 }.makeBroadcastPendingIntent(this@MainActivity)
                 addAction(R.drawable.ic_launcher_foreground, "Translator", pendingIntent)
-
             }
 
 

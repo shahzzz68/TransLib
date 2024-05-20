@@ -7,6 +7,8 @@ import android.graphics.Path
 import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
@@ -195,22 +197,27 @@ object AccessibilityServiceUtils {
                 "content",
                 "content desc"
             )
+
             AccessibilityEvent.CONTENT_CHANGE_TYPE_PANE_APPEARED -> Log.d(
                 "content",
                 "pane appeard"
             )
+
             AccessibilityEvent.CONTENT_CHANGE_TYPE_PANE_DISAPPEARED -> Log.d(
                 "content",
                 "pane dissapear"
             )
+
             AccessibilityEvent.CONTENT_CHANGE_TYPE_PANE_TITLE -> Log.d(
                 "content",
                 "pane title"
             )
+
             AccessibilityEvent.CONTENT_CHANGE_TYPE_STATE_DESCRIPTION -> Log.d(
                 "content",
                 "state desc"
             )
+
             AccessibilityEvent.CONTENT_CHANGE_TYPE_SUBTREE -> Log.d("content", "subtree")
             AccessibilityEvent.CONTENT_CHANGE_TYPE_TEXT -> Log.d("content", "type text")
             else -> Log.d("content", "undefined")
@@ -225,7 +232,7 @@ object AccessibilityServiceUtils {
     fun AccessibilityNodeInfo?.performChatSendActions(
         msg: String,
         editTextId: String,
-        sendBtnId: String
+        vararg sendBtnId: String
     ) {
 
         this?.let {
@@ -236,10 +243,19 @@ object AccessibilityServiceUtils {
                 msg
             )
 
+
+            Handler(Looper.myLooper()!!).postDelayed({
+
+                for (id in sendBtnId) {
+                    val btnId = extractViewFromID(id)
+                    if (btnId != null) {
+                        btnId.performClick()
+                        break
+                    }
+                }
+
+            }, 500)
             // perfrom send action on send btn
-            extractViewFromID(
-                sendBtnId
-            )?.performClick()
 
         }
     }
